@@ -7,7 +7,7 @@ from .default_settings import *
 # custom settings
 # =======================================
 
-INSTALLED_APPS += ['avalon']
+INSTALLED_APPS += ['avalon', 'channels']
 
 # Add extra path
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
@@ -35,6 +35,18 @@ LANGUAGE_CODE = 'ja'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)   # ファイルを置く場所
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")      # collectstatic で集まる場所
 STATIC_URL = '/static/'                                  # 外部に向けた配信 URL
+
+# channels の設定
+ASGI_APPLICATION = 'config.routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6379)],
+        },
+    },
+}
 
 # ログ設定
 LOGGING = {

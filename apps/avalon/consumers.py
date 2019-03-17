@@ -11,24 +11,14 @@ class EntryConsumer(WebsocketConsumer):
 
         # Join room group
         async_to_sync(self.channel_layer.group_add)(
-            self.room_group_name,
-            self.channel_name
-        )
-        print(self.channel_name)
-        print(self.channel_name)
-        print(self.channel_name)
-        print(self.channel_name)
-        print(self.channel_name)
-        print(self.channel_name)
+            self.room_group_name, self.channel_name)
 
         self.accept()
 
     def disconnect(self, close_code):
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
-            self.room_group_name,
-            self.channel_name
-        )
+            self.room_group_name, self.channel_name)
 
     # Receive message from WebSocket
     def receive(self, text_data, **kwargs):
@@ -38,17 +28,11 @@ class EntryConsumer(WebsocketConsumer):
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
-            {
-                'type': 'chat_message',
-                'player_name': player_name
-            }
-        )
+            {'type': 'chat_message', 'player_name': player_name})
 
     # Receive message from room group
     def chat_message(self, event):
         player_name = event['player_name']
 
         # Send message to WebSocket
-        self.send(text_data=json.dumps({
-            'player_name': player_name
-        }))
+        self.send(text_data=json.dumps({'player_name': player_name}))
